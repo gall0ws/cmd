@@ -13,7 +13,7 @@ CFLAGS+=\
 	-Wno-parentheses\
 	-Wno-sign-compare
 
-BINS=	markov monty setsid tsize
+BINS=	markov monty setsid tsize usleep
 
 all:	$(BINS)
 
@@ -29,6 +29,9 @@ setsid: setsid.o setsid.c
 tsize:  tsize.o tsize.c
 	$(CC) -lncurses -o $@ $<
 
+usleep: usleep.o usleep.c
+	$(CC) -o $(@) $<
+
 %.o:	%.c
 	$(CC) $(CFLAGS) -c -o $@ $(@:.o=.c)
 
@@ -36,6 +39,6 @@ clean:
 	rm -f *.o $(BINS)
 
 install: $(BINS)
-	$(INSTALL) -Cs $^ $(BINDIR)
+	$(INSTALL) -Csv $^ $(BINDIR)
 
 .PHONY:	all clean install
