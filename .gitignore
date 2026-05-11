@@ -1,6 +1,7 @@
 markov
 monty
 setsid
+statfs
 tsize
 usleep
 *.o

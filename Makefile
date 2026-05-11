@@ -1,5 +1,6 @@
 CC?=		clang
 GO?=		go
+STRIP?=		strip
 INSTALL?=	install
 CFLAGS?=	-O2 -g
 BINDIR?=	$(HOME)/bin
@@ -13,7 +14,7 @@ CFLAGS+=\
 	-Wno-parentheses\
 	-Wno-sign-compare
 
-BINS=	markov monty setsid tsize usleep
+BINS=	markov monty setsid statfs tsize usleep
 
 all:	$(BINS)
 
@@ -22,6 +23,9 @@ markov: markov.go
 
 monty:  monty.go
 	$(GO) build -o $@ $^
+
+statfs: statfs.o statfs.c
+	$(CC) -o $(@) $<
 
 setsid: setsid.o setsid.c
 	$(CC) -o $(@) $<
@@ -39,6 +43,7 @@ clean:
 	rm -f *.o $(BINS)
 
 install: $(BINS)
-	$(INSTALL) -Csv $^ $(BINDIR)
+	$(STRIP) $^
+	$(INSTALL) -Cv $^ $(BINDIR)
 
 .PHONY:	all clean install
