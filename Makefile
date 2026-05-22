@@ -9,14 +9,14 @@ CFLAGS+=\
 	-Wall\
 	-Wextra\
 	-Werror\
-	-Wno-format-zero-length\
-	-Wno-missing-braces\
-	-Wno-parentheses\
-	-Wno-sign-compare
+	-Wno-format-zero-length
 
-BINS=	markov monty setsid statfs tsize usleep
+BINS=	avatar markov monty setsid statfs tsize usleep
 
 all:	$(BINS)
+
+avatar: avatar.go
+	$(GO) build -o $@ $^
 
 markov: markov.go
 	$(GO) build -o $@ $^
