@@ -36,7 +36,7 @@ func NewChain(rd io.Reader, prefLen int) (*Chain, error) {
 	s.Split(bufio.ScanWords)
 
 	// Initialise prefix.
-	for i := 0; i < prefLen; i++ {
+	for i := range prefLen {
 		if !s.Scan() {
 			return nil, errors.New("input too small")
 		}
