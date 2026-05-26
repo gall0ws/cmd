@@ -8,10 +8,9 @@ BINDIR?=	$(HOME)/bin
 CFLAGS+=\
 	-Wall\
 	-Wextra\
-	-Werror\
-	-Wno-format-zero-length
+	-Werror
 
-BINS=	avatar markov monty setsid statfs tsize usleep
+BINS=	avatar markov monty setsid statfs tac tsize usleep
 
 all:	$(BINS)
 
@@ -28,6 +27,9 @@ statfs: statfs.o statfs.c
 	$(CC) -o $(@) $<
 
 setsid: setsid.o setsid.c
+	$(CC) -o $(@) $<
+
+tac:    tac.o tac.c
 	$(CC) -o $(@) $<
 
 tsize:  tsize.o tsize.c
