@@ -6,6 +6,10 @@
 #include <sysexits.h>
 #include <stdio.h>
 
+#ifdef __OpenBSD__
+# include <time.h>
+#endif
+
 struct mntflags {
 	int flag;
 	char *name;
@@ -14,28 +18,37 @@ struct mntflags {
 struct mntflags mntflags[] = {
 	{ MNT_LOCAL, "local" },
 	{ MNT_RDONLY, "read-only" },
-	{ MNT_AUTOMOUNTED, "automounted" },
-	{ MNT_JOURNALED, "journaled" },
 	{ MNT_NOATIME, "noatime" },
-	{ MNT_DONTBROWSE, "nobrowse" },
 	{ MNT_NODEV, "nodev" },
 	{ MNT_NOEXEC, "noexec" },
 	{ MNT_NOSUID, "nosuid" },
-	{ MNT_UNION, "union" },
 	{ MNT_ASYNC, "async" },
 	{ MNT_SYNCHRONOUS, "synchronous" },
 	{ MNT_ROOTFS, "rootfs" },
-	{ MNT_CPROTECT, "protect" },
 	{ MNT_EXPORTED, "exported" },
+	{ MNT_QUOTA, "quota" },
+
+#ifdef __APPLE__
+	{ MNT_AUTOMOUNTED, "automounted" },
+	{ MNT_JOURNALED, "journaled" },
+	{ MNT_DONTBROWSE, "nobrowse" },
+	{ MNT_UNION, "union" },
+	{ MNT_CPROTECT, "protect" },
 	{ MNT_REMOVABLE, "removable" },
 	{ MNT_QUARANTINE, "quarantine" },
-	{ MNT_QUOTA, "quota" },
 	{ MNT_IGNORE_OWNERSHIP, "ignore_ownership" },
 	{ MNT_NOUSERXATTR, "nouserxattr" },
 	{ MNT_DEFWRITE, "defwrite" },
 	{ MNT_NOFOLLOW, "nofollow" },
 	{ MNT_SNAPSHOT, "snapshot" },
 	{ MNT_STRICTATIME, "strictatime" },
+#endif
+
+#ifdef __OpenBSD__
+	{ MNT_NOPERM, "noperm" },
+	{ MNT_WXALLOWED, "wxallowed" },
+#endif
+
 	{ 0, NULL }
 };
 
@@ -57,17 +70,27 @@ main(int argc, char **argv)
 	}
 
 	printf("name: %s\n", st.f_fstypename);
+#ifdef __APPLE__
 	printf("type: %u.%ud\n", st.f_type, st.f_fssubtype);
+#endif
 	printf("mounted from: %s\n", st.f_mntfromname);
 	printf("mounted to: %s\n", st.f_mntonname);
 
-	printf("mount flags: ");
+#ifdef __OpenBSD__
+	printf("last mounted: %s", ctime((const time_t *)&st.f_ctime));
+	printf("# sync writes: %llu\n", st.f_syncwrites);
+	printf("# sync reads: %llu\n", st.f_syncreads);
+	printf("# async writes: %llu\n", st.f_asyncwrites);
+	printf("# async reads: %llu\n", st.f_asyncreads);
+#endif
+
+	printf("mount flags:");
 	for (p=mntflags; p->name; p++) {
 		if (st.f_flags & p->flag) {
-			printf("%s, ", p->name);
+			printf(" %s", p->name);
 		}
 	}
-	printf("\b\b \n");
+	printf("\n");
 
 	printf("owner: ");
 	pw = getpwuid(st.f_owner);
