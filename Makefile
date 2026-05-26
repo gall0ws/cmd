@@ -2,13 +2,14 @@ CC?=		clang
 GO?=		go
 STRIP?=		strip
 INSTALL?=	install
-CFLAGS?=	-O2 -g
+CFLAGS?=	-O2 -g -pipe
 BINDIR?=	$(HOME)/bin
 
 CFLAGS+=\
 	-Wall\
 	-Wextra\
-	-Werror
+	-Werror\
+	-pedantic
 
 BINS=	avatar markov monty setsid statfs tac tsize usleep
 

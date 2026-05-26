@@ -1,7 +1,8 @@
 #include <curses.h>
 #include <stdio.h>
 
-int main()
+int
+main(void)
 {
 	WINDOW *w;
 	int y, x;
@@ -12,7 +13,7 @@ int main()
 	}
 	getmaxyx(w, y, x);
 	endwin();
-
 	printf("%dx%d\n", x, y);
+
 	return 0;
 }
